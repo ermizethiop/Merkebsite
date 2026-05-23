@@ -1,418 +1,460 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import L7 from "../assets/L7.jpg";
+import { FiArrowRight, FiCheck, FiCode, FiLayers, FiZap, FiTrendingUp, FiUsers, FiClock, FiShield, FiStar, FiTarget, FiHeart, FiAward } from "react-icons/fi";
+import { SiReact, SiNodedotjs, SiPython, SiMongodb, SiTailwindcss, SiDjango, SiFlask, SiMysql, SiNextdotjs, SiTypescript } from "react-icons/si";
+import W1 from "../assets/W1.webp";
+import W2 from "../assets/W2.webp";
+import P_O from "../assets/P_O.webp";
+import SectionTitle from "../components/SectionTitle";
+import GlassCard from "../components/GlassCard";
+import AnimatedSection from "../components/AnimatedSection";
+import ParticleNetwork from "../components/ParticleNetwork";
+import GradientBlobs from "../components/GradientBlobs";
+import CodeWindow from "../components/CodeWindow";
+import ScrollReveal from "../components/ScrollReveal";
+import CountUp from "../components/CountUp";
 
-import L7_2 from "../assets/L7_2.png";
-
-import W1 from "../assets/W1.png";
-import W2 from "../assets/W2.png";
-
-import L4 from "../assets/L4.jpg";
-import L1 from "../assets/L1.jpg";
-import L2 from "../assets/L2.jpg";
-import L3 from "../assets/L3.jpg";
-import L22 from "../assets/L22.jpg";
-
-// ================= SLIDES =================
-const slides = [
-  { image: L22, title: "Building Digital Empires with Brilliant Code" },
-  { image: L4, title: "Innovating the Web with Passion and Precision" },
-  {
-    image: L2,
-    title: "Empowering Businesses Through Smarter, Faster, Better Code",
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12 },
   },
-  { image: L1, title: "Transforming Ideas Into Digital Reality" },
-  { image: L3, title: "Your Digital Growth, Powered by Brilliant Minds" },
+};
+
+const staggerItem = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
+
+const stats = [
+  { value: "50+", label: "Projects Delivered", icon: FiCode },
+  { value: "20+", label: "Happy Clients", icon: FiUsers },
+  { value: "99%", label: "Client Satisfaction", icon: FiTrendingUp },
+  { value: "24/7", label: "Support", icon: FiClock },
 ];
 
-// ================= UNIQUE CONTENT =================
-const uniqueContent = [
+const processSteps = [
+  { step: "01", title: "Discovery", desc: "We dive deep into your vision, goals, and audience to craft a roadmap for success.", icon: FiTarget },
+  { step: "02", title: "Strategy", desc: "We architect a tailored plan combining design thinking with technical feasibility.", icon: FiLayers },
+  { step: "03", title: "Design & Develop", desc: "Our team builds pixel-perfect, high-performance solutions using cutting-edge tech.", icon: FiCode },
+  { step: "04", title: "Launch", desc: "We deploy, test, and optimize — ensuring your digital presence is flawless.", icon: FiAward },
+  { step: "05", title: "Grow", desc: "Ongoing support, analytics, and iteration to keep you ahead of the curve.", icon: FiTrendingUp },
+];
+
+const features = [
+  { title: "Lightning Fast", desc: "Optimized for speed with sub-second load times and performance best practices.", icon: FiZap },
+  { title: "Pixel Perfect", desc: "Every detail is crafted with precision for a flawless visual experience.", icon: FiLayers },
+  { title: "Battle Tested", desc: "Robust security, scalability, and reliability built into every solution.", icon: FiShield },
+];
+
+const whyUs = [
+  { title: "Creative & Affordable", desc: "Student developers bring fresh ideas and modern design at accessible prices." },
+  { title: "Innovative Approach", desc: "Modern frameworks and performance-driven practices for standout digital solutions." },
+  { title: "Client-Centered", desc: "Transparent collaboration ensuring the final product exceeds expectations." },
+  { title: "Future-Ready", desc: "Scalable products designed to keep your business ahead in a fast-changing world." },
+];
+
+const projects = [
+  { img: W1, name: "Fetel Habesha Dress", desc: "E-commerce platform for traditional Ethiopian fashion", link: "https://habesha-traditional-dress.vercel.app/" },
+  { img: W2, name: "KARAWI Hotel", desc: "Premium hotel booking & management system", link: "https://kerawi-hotel.onrender.com/" },
+  { img: P_O, name: "Corporate Profile", desc: "Professional web presence highlighting mission, services, and organizational impact.", link: "https://www.segelconsult.com/" },
+];
+
+const techStack = [
+  { name: "React", icon: SiReact, color: "text-cyan-400" },
+  { name: "Next.js", icon: SiNextdotjs, color: "text-white" },
+  { name: "TypeScript", icon: SiTypescript, color: "text-blue-500" },
+  { name: "Node.js", icon: SiNodedotjs, color: "text-green-500" },
+  { name: "Python", icon: SiPython, color: "text-yellow-500" },
+  { name: "Django", icon: SiDjango, color: "text-green-600" },
+  { name: "Flask", icon: SiFlask, color: "text-gray-300" },
+  { name: "MongoDB", icon: SiMongodb, color: "text-green-600" },
+  { name: "MySQL", icon: SiMysql, color: "text-blue-600" },
+  { name: "Tailwind", icon: SiTailwindcss, color: "text-teal-400" },
+];
+
+const testimonials = [
   {
-    title: "Creative, Affordable, and On Time",
-    details:
-      "At Merkeb Technology, our talented student developers bring fresh ideas and modern design to every project. We focus on delivering high-quality websites that look great, perform smoothly, and are always delivered on time.",
+    quote: "Merkeb Tech transformed our online presence. The team was professional, responsive, and delivered beyond our expectations.",
+    author: "Abebe Kebede",
+    role: "Founder, Habesha Fashion",
   },
   {
-    title: "Innovative Development Approach",
-    details:
-      "We combine creativity with deep technical knowledge to craft digital solutions that stand out. Our team uses modern frameworks and performance-driven practices to ensure your business thrives online.",
-  },
-  {
-    title: "Client-Centered Collaboration",
-    details:
-      "We work closely with our clients to reflect their brand and goals. Through transparent communication, we make sure the final product exceeds expectations.",
-  },
-  {
-    title: "Future-Ready Solutions",
-    details:
-      "Our products are designed with scalability in mind, helping your business stay ahead in a fast-changing tech world.",
+    quote: "Working with Merkeb was a game-changer. They built a booking system that saved us countless hours of manual work.",
+    author: "Sara Mohammed",
+    role: "Manager, KARAWI Hotel",
   },
 ];
 
-// ================= COMPONENT =================
+const values = [
+  { icon: FiCode, label: "Clean Code" },
+  { icon: FiHeart, label: "Passion" },
+  { icon: FiTarget, label: "Precision" },
+  { icon: FiUsers, label: "Collaboration" },
+];
+
 export default function Home() {
-  const [index, setIndex] = useState(0);
-  const [openIndex, setOpenIndex] = useState(null);
-
-  // Preload slides
-  useEffect(() => {
-    slides.forEach((s) => (new Image().src = s.image));
-  }, []);
-
-  // Auto slide
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % slides.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
-    <>
-      {/* ================= SLIDER ================= */}
-      <section className="relative z-0 w-screen min-h-screen overflow-hidden flex items-center justify-center">
-        <div className="absolute inset-0 bg-blue-50 bg-opacity-40 -z-10 pointer-events-none" />
-        <AnimatePresence mode="wait">
-          <motion.img
-            key={slides[index].image}
-            src={slides[index].image}
-            alt={slides[index].title}
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.8, ease: [0.45, 0, 0.55, 1] }}
-            className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none -z-10"
-          />
-        </AnimatePresence>
-
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-md">
-              {slides[index].title}
-            </h1>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ================= HERO SECTION ================= */}
-      <section className="w-full min-h-[80vh] bg-white pt-24 py-8">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center gap-10 md:gap-14">
-          {/* Left */}
-          <motion.div
-            className="w-full md:w-1/2"
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className="text-4xl md:text-5xl font-semibold text-blue-900 leading-tight">
-              We Build Smart, Modern Websites.
-            </h1>
-            <p className="mt-4 md:mt-6 text-1g md:text-2xl text-blue-950">
-              From sleek designs to fast performance — we create sites that
-              bring real results for small businesses, restaurants, and
-              organizations.
-            </p>
-            <div className="mt-12">
-              <Link
-                to="/contact"
-                className="w-max bg-gradient-to-r from-purple-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium px-6 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                Let's Work Together
-              </Link>
-            </div>
-          </motion.div>
-
-          {/* Right */}
-          <motion.div
-            className="w-full md:w-1/2"
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <img
-              src={L7_2}
-              alt="Hero Visual"
-              className="w-full h-[320px] md:h-[460px] object-cover rounded-xl"
-            />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ================= OUR PROCESS ================= */}
-      <section
-        style={{ fontFamily: "'Inter', sans-serif" }}
-        className="bg-white text-white py-18 my-15"
-      >
-        {" "}
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          {" "}
-          <motion.h2
-            initial={{ opacity: 0, y: -30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl text-blue-900 font-semibold mb-8 md:text-5xl"
-          >
-            {" "}
-            Our Process{" "}
-          </motion.h2>{" "}
-          <motion.p
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-blue-950 text-1g md:text-2xl mb-8"
-          >
-            {" "}
-            From idea to launch — here's how we turn your vision into a fully
-            functional website.{" "}
-          </motion.p>{" "}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {" "}
-            {/* Step 1 */}{" "}
+    <div className="relative">
+      <GradientBlobs />
+      <div className="relative z-10">
+      {/* ===== HERO ===== */}
+      <section className="relative min-h-screen flex items-center overflow-hidden pt-28">
+        <div className="absolute inset-0 bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900" />
+        <ParticleNetwork />
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* LEFT */}
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              whileHover={{ scale: 1.05, y: -5 }}
-              className="group p-6 bg-white rounded-2xl shadow transition-all duration-300 hover:shadow-xl hover:shadow-blue-100"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             >
-              {" "}
-              <motion.div
-                className="mb-4 flex justify-center"
-                initial={{ scale: 0, rotate: -180 }}
-                whileInView={{ scale: 1, rotate: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5, delay: 0.5, type: "spring" }}
-              >
-                {" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-12 h-12 text-blue-700 transition-transform transition-colors duration-300 group-hover:text-blue-800 group-hover:scale-105"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  {" "}
-                  <path d="M7 7.5A1.5 1.5 0 0 1 8.5 6h7A1.5 1.5 0 0 1 17 7.5v5A1.5 1.5 0 0 1 15.5 14H11l-3.293 3.293A1 1 0 0 1 6 16.586V7.5Z" />{" "}
-                </svg>{" "}
-              </motion.div>{" "}
-              <h3 className="text-2xl text-blue-900 font-medium mb-2">
-                {" "}
-                1. Consultation{" "}
-              </h3>{" "}
-              <p className="text-blue-950">
-                {" "}
-                We discuss your goals, ideas, and what kind of site fits your
-                brand best.{" "}
-              </p>{" "}
-            </motion.div>{" "}
-            {/* Step 2 */}{" "}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              whileHover={{ scale: 1.05, y: -5 }}
-              className="group p-6 bg-white rounded-2xl shadow transition-all duration-300 hover:shadow-xl hover:shadow-blue-100"
-            >
-              {" "}
-              <motion.div
-                className="mb-4 flex justify-center"
-                initial={{ scale: 0, rotate: -180 }}
-                whileInView={{ scale: 1, rotate: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5, delay: 0.6, type: "spring" }}
-              >
-                {" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-12 h-12 text-blue-700 transition-transform transition-colors duration-300 group-hover:text-blue-800 group-hover:scale-105"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  {" "}
-                  <path d="M7 8h10" /> <path d="M7 12h10" />{" "}
-                  <path d="M7 16h7" />{" "}
-                </svg>{" "}
-              </motion.div>{" "}
-              <h3 className="text-2xl text-blue-900 font-medium mb-2">
-                {" "}
-                2. Design & Build{" "}
-              </h3>{" "}
-              <p className="text-blue-950">
-                {" "}
-                Once you approve the design, our developers bring it to life
-                using modern tools.{" "}
-              </p>{" "}
-            </motion.div>{" "}
-            {/* Step 3 */}{" "}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              whileHover={{ scale: 1.05, y: -5 }}
-              className="group p-6 bg-white rounded-2xl shadow transition-all duration-300 hover:shadow-xl hover:shadow-blue-100"
-            >
-              {" "}
-              <motion.div
-                className="mb-4 flex justify-center"
-                initial={{ scale: 0, rotate: -180 }}
-                whileInView={{ scale: 1, rotate: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5, delay: 0.7, type: "spring" }}
-              >
-                {" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-12 h-12 text-blue-700 transition-transform transition-colors duration-300 group-hover:text-blue-800 group-hover:scale-105"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  {" "}
-                  <path d="M14.5 2c-1.933 0-3.5 1.567-3.5 3.5V8H8.5C6.567 8 5 9.567 5 11.5V13h2.586l-2.293 2.293A1 1 0 0 0 6 16.707L8.707 14H10.5v1.793L8.207 18.086a1 1 0 1 0 1.414 1.414L11.5 17.621V20a1 1 0 0 0 1.707.707l2.586-2.586H18.5c1.933 0 3.5-1.567 3.5-3.5V9.5c0-3.59-2.91-6.5-6.5-6.5Z" />{" "}
-                </svg>{" "}
-              </motion.div>{" "}
-              <h3 className="text-2xl text-blue-900 font-medium mb-2">
-                {" "}
-                3. Launch & Support{" "}
-              </h3>{" "}
-              <p className="text-blue-950">
-                {" "}
-                After launch, we provide updates, maintenance, and ongoing
-                support as needed.{" "}
-              </p>{" "}
-            </motion.div>{" "}
-          </div>{" "}
-        </div>{" "}
-      </section>
-
-      {/* ================= WHY UNIQUE ================= */}
-      <section className="py-20 bg-gray-50 flex flex-col md:flex-row items-center justify-center px-6 md:px-16 gap-10">
-        {/* Left */}
-        <motion.div
-          className="w-full md:w-1/2"
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h2 className="text-4xl md:text-5xl font-semibold text-blue-900 mb-4">
-            Why Businesses Choose Merkeb Tech
-          </h2>
-          <p className="text-blue-950 md:text-2xl leading-relaxed font-medium">
-            At Merkeb Tech, we bring together creativity, affordability, and
-            precision to deliver websites that stand out and perform.
-          </p>
-        </motion.div>
-
-        {/* Right - Accordion */}
-        <motion.div
-          className="w-full md:w-1/2"
-          initial={{ opacity: 0, x: 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="space-y-6">
-            {uniqueContent.map((item, i) => (
-              <motion.div
-                key={i}
-                className="bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all p-5"
-              >
-                <div className="flex justify-between items-center">
-                  <h3 className="text-xl text-gray-800 font-semibold">
-                    {item.title}
-                  </h3>
-                  <button
-                    onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                    className="text-yellow-600 text-2xl font-semibold focus:outline-none"
-                    style={{
-                      transform:
-                        openIndex === i ? "rotate(180deg)" : "rotate(0deg)",
-                      transition: "transform 0.3s ease",
-                    }}
-                  >
-                    {openIndex === i ? "−" : "+"}
-                  </button>
+              <span className="inline-block text-xs font-mono tracking-widest text-primary-light/80 uppercase mb-6">
+                🇪🇹 Addis Ababa · Est. 2024
+              </span>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold text-white leading-[1.1] mb-6">
+                Building Digital
+                <br />
+                <span className="bg-gradient-to-r from-primary via-primary-light to-secondary bg-clip-text text-transparent">
+                  Empires
+                </span>
+                {" "}with Brilliant Code
+              </h1>
+              <p className="text-lg md:text-xl text-gray-300 max-w-xl mb-10 leading-relaxed">
+                From inventory systems to SaaS platforms — we ship software that actually works.
+              </p>
+              <div className="flex flex-wrap items-center gap-4 mb-3">
+                <Link to="/contact" className="group relative px-9 py-3.5 text-base font-semibold rounded-full bg-gradient-to-r from-primary to-secondary text-white overflow-hidden transition-all duration-300 hover:shadow-[0_0_50px_-5px_rgba(249,115,22,0.6)] hover:scale-105 active:scale-95">
+                  <span className="relative z-10 flex items-center gap-2">
+                    Start a Project
+                    <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+                  </span>
+                </Link>
+                <Link to="/portfolio" className="group relative text-base font-semibold text-primary-light transition-all duration-300">
+                  See Our Work
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-light transition-all duration-300 group-hover:w-full" />
+                </Link>
+              </div>
+              <p className="text-xs text-gray-500 mb-8">Free consultation · No commitment</p>
+              <div className="flex items-center gap-3">
+                <div className="flex -space-x-2">
+                  {["JD", "SM", "AT", "KM"].map((init, i) => (
+                    <div key={i} className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-[10px] font-bold text-white border-2 border-dark-900">
+                      {init}
+                    </div>
+                  ))}
                 </div>
+                <span className="text-sm text-gray-400">
+                  <span className="text-white font-semibold">12+</span> projects delivered
+                </span>
+              </div>
+            </motion.div>
 
-                <AnimatePresence>
-                  {openIndex === i && (
-                    <motion.div
-                      initial={{ opacity: 0, maxHeight: 0 }}
-                      animate={{ opacity: 1, maxHeight: 500 }}
-                      exit={{ opacity: 0, maxHeight: 0 }}
-                      transition={{ duration: 0.5, ease: "easeInOut" }}
-                      className="overflow-hidden mt-3"
-                    >
-                      <p className="text-gray-600 leading-relaxed">
-                        {item.details}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
+            {/* RIGHT */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
+              className="hidden lg:block"
+            >
+              <CodeWindow />
+            </motion.div>
+          </div>
+        </div>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 0.8 }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
+          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
+            <div className="w-1.5 h-3 bg-white/60 rounded-full mt-2 animate-bounce" />
           </div>
         </motion.div>
       </section>
 
-      {/* ================= OUR RECENT WORK ================= */}
-      <section className="py-16 bg-white text-center px-6 md:px-16">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8 }}
-          className="text-4xl md:text-5xl text-blue-900 font-bold mb-10"
-        >
-          Our Recent Work
-        </motion.h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {[
-            { img: W1, name: "Fetel Habesha dress Website" },
-            { img: W2, name: "KARAWI Hotel Website" },
-          ].map((work, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.7 }}
-              className="overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-500"
-            >
-              <img
-                src={work.img}
-                alt={work.name}
-                className="w-full h-80 object-cover hover:scale-105 transition-transform duration-700"
-              />
-              <div className="py-4 bg-gray-50">
-                <h3 className="text-xl text-gray-800 font-semibold">
-                  {work.name}
-                </h3>
-              </div>
-            </motion.div>
-          ))}
+      {/* ===== STATS ===== */}
+      <ScrollReveal>
+      <section className="relative py-28">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
+            {stats.map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="text-center"
+              >
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 mb-5">
+                  <stat.icon className="text-2xl text-primary-light" />
+                </div>
+                <div className="text-5xl md:text-6xl font-display font-bold text-white mb-2">
+                  {stat.value.includes("/") ? stat.value : <CountUp end={parseInt(stat.value)} suffix={stat.value.includes("+") ? "+" : stat.value.includes("%") ? "%" : ""} />}
+                </div>
+                <div className="text-sm text-gray-400 font-medium tracking-wide">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
-    </>
+      </ScrollReveal>
+
+      {/* ===== TECH STACK MARQUEE ===== */}
+      <ScrollReveal>
+      <section className="relative py-16 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-dark-900 via-primary/5 to-dark-900" />
+        <div className="relative">
+          <div className="flex gap-16 animate-marquee items-center" style={{ width: "max-content" }}>
+            {[...techStack, ...techStack].map((tech, i) => (
+              <div key={i} className="flex items-center gap-4 px-6">
+                <tech.icon className={`text-5xl ${tech.color} transition-all duration-300 hover:scale-110`} />
+                <span className="text-lg font-semibold text-gray-300 whitespace-nowrap">{tech.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      </ScrollReveal>
+
+      {/* ===== ABOUT — text-only with values grid ===== */}
+      <section className="relative py-32">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="max-w-4xl mx-auto text-center mb-16">
+            <AnimatedSection>
+              <span className="inline-block text-sm font-semibold tracking-[0.2em] uppercase text-primary-light mb-4">
+                About Merkeb Tech
+              </span>
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-white leading-[1.1] mb-8">
+                We Build Smart,{" "}
+                <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  Modern Websites.
+                </span>
+              </h2>
+              <p className="text-gray-300 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
+                From sleek designs to fast performance — we create sites that bring real results for small businesses, restaurants, and organizations. Our team of passionate developers combines creativity with technical expertise to deliver exceptional digital solutions.
+              </p>
+            </AnimatedSection>
+          </div>
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="flex flex-wrap justify-center gap-8"
+          >
+            {values.map((v) => (
+              <motion.div key={v.label} variants={staggerItem} className="flex flex-col items-center gap-3 px-8 py-6 rounded-2xl border border-glass-border bg-glass backdrop-blur-xl">
+                <v.icon className="text-3xl text-primary-light" />
+                <span className="text-sm font-semibold text-gray-300 tracking-wide">{v.label}</span>
+              </motion.div>
+            ))}
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="text-center mt-12"
+          >
+            <Link to="/contact" className="inline-flex items-center gap-2 px-8 py-4 text-base font-semibold rounded-xl bg-gradient-to-r from-primary to-secondary text-white hover:shadow-[0_0_40px_-5px_rgba(249,115,22,0.5)] transition-all duration-300 hover:scale-105 active:scale-95">
+              Let's Work Together
+              <FiArrowRight />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ===== HORIZONTAL TIMELINE PROCESS ===== */}
+      <section className="relative py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-secondary/5 pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-6">
+          <SectionTitle subtitle="How We Work" title="From Idea to Launch" />
+          <div className="timeline-line grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-4 pt-12">
+            {processSteps.map((step, i) => (
+              <motion.div
+                key={step.step}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.15 }}
+                className="relative flex flex-col items-center text-center md:pt-0 pt-0"
+              >
+                <div className="relative z-10 w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-lg shadow-[0_0_20px_-3px_rgba(249,115,22,0.5)] animate-dot-pulse md:mb-6 mb-4">
+                  {step.step}
+                </div>
+                <div className="md:hidden absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/40 to-secondary/40 -z-10" />
+                <div className="md:mt-0 mt-2">
+                  <h3 className="text-lg font-display font-semibold text-white mb-2">{step.title}</h3>
+                  <p className="text-sm text-gray-400 leading-relaxed max-w-[220px]">{step.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== TESTIMONIALS ===== */}
+      <section className="relative py-32">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-secondary/5 pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-6">
+          <SectionTitle subtitle="Testimonials" title="What Our Clients Say" />
+          <div className="grid md:grid-cols-2 gap-8">
+            {testimonials.map((t, i) => (
+              <GlassCard key={t.author} delay={i * 0.15} className="p-10">
+                <div className="flex gap-1 mb-6">
+                  {[...Array(5)].map((_, j) => (
+                    <FiStar key={j} className="text-yellow-500 fill-yellow-500" />
+                  ))}
+                </div>
+                <p className="text-gray-300 text-lg leading-relaxed mb-8 italic">"{t.quote}"</p>
+                <div className="flex items-center gap-1">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-lg">
+                    {t.author.charAt(0)}
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-white font-semibold">{t.author}</p>
+                    <p className="text-gray-400 text-sm">{t.role}</p>
+                  </div>
+                </div>
+              </GlassCard>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== WHY CHOOSE US ===== */}
+      <section className="relative py-32">
+        <div className="max-w-7xl mx-auto px-6">
+          <SectionTitle subtitle="Why Merkeb Tech" title="Why Businesses Choose Us" />
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid md:grid-cols-2 gap-6"
+          >
+            {whyUs.map((item) => (
+              <motion.div key={item.title} variants={staggerItem}>
+                <GlassCard className="p-10">
+                  <div className="flex gap-5">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mt-1">
+                      <FiCheck className="text-xl text-primary-light" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-display font-semibold text-white mb-3">{item.title}</h3>
+                      <p className="text-gray-400 leading-relaxed">{item.desc}</p>
+                    </div>
+                  </div>
+                </GlassCard>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ===== FEATURES ===== */}
+      <section className="relative py-32">
+        <div className="max-w-7xl mx-auto px-6">
+          <SectionTitle subtitle="What We Offer" title="Built for Excellence" />
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid md:grid-cols-3 gap-8"
+          >
+            {features.map((feat) => (
+              <motion.div key={feat.title} variants={staggerItem}>
+                <GlassCard className="p-10 text-center">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 border border-primary/20 flex items-center justify-center mx-auto mb-8">
+                    <feat.icon className="text-4xl text-primary-light" />
+                  </div>
+                  <h3 className="text-2xl font-display font-semibold text-white mb-4">{feat.title}</h3>
+                  <p className="text-gray-400 leading-relaxed">{feat.desc}</p>
+                </GlassCard>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ===== RECENT WORK ===== */}
+      <section className="relative py-32">
+        <div className="max-w-7xl mx-auto px-6">
+          <SectionTitle subtitle="Portfolio" title="Our Recent Work" />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects.map((work, i) => {
+              const Card = work.link ? motion.a : motion.div;
+              const linkProps = work.link ? { href: work.link, target: "_blank", rel: "noopener noreferrer" } : {};
+              return (
+                <Card
+                  key={work.name}
+                  {...linkProps}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  whileHover={{ y: -6 }}
+                  className="group rounded-2xl border border-glass-border bg-glass backdrop-blur-xl overflow-hidden transition-all duration-500 hover:border-primary/50 hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.3)]"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <img src={work.img} alt={work.name} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-lg font-display font-semibold text-white mb-1.5">{work.name}</h3>
+                    <p className="text-gray-400 text-sm leading-relaxed mb-3">{work.desc}</p>
+                    {work.link && (
+                      <span className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-light group-hover:gap-2.5 transition-all">View Project <FiArrowRight className="text-xs" /></span>
+                    )}
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="text-center mt-12"
+          >
+            <Link to="/portfolio" className="group inline-flex items-center gap-2 px-8 py-3.5 text-sm font-semibold rounded-xl bg-gradient-to-r from-primary to-secondary text-white hover:shadow-[0_0_40px_-5px_rgba(249,115,22,0.5)] transition-all duration-300 hover:scale-105 active:scale-95">
+              View All Projects
+              <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ===== CTA ===== */}
+      <section className="relative py-40">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-secondary/5 to-primary/10" />
+        <div className="absolute top-0 left-1/3 w-96 h-96 bg-primary/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 right-1/3 w-80 h-80 bg-secondary/10 rounded-full blur-[100px]" />
+        <div className="relative max-w-4xl mx-auto px-6 text-center">
+          <SectionTitle subtitle="Get In Touch" title="Ready to Build Something Amazing?" />
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed"
+          >
+            Let's collaborate to create a digital experience that sets your business apart. Your vision, our expertise — together we'll build something extraordinary.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <Link to="/contact" className="group inline-flex items-center gap-3 px-12 py-5 text-lg font-semibold rounded-xl bg-gradient-to-r from-primary to-secondary text-white hover:shadow-[0_0_60px_-5px_rgba(249,115,22,0.6)] transition-all duration-300 hover:scale-105 active:scale-95">
+              Start Your Project
+              <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+      </div>
+    </div>
   );
 }
